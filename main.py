@@ -1,34 +1,73 @@
 from file_processing import *
+import argparse
+import sys
 
 
 def main():
-    print("Caesar Cipher Program")
-    choice = input("Choose an option:\n1. Encrypt/Decrypt Text\n2. Encrypt/Decrypt File\nEnter your choice (1/2): ").strip()
+    if len(sys.argv) > 1 and sys.argv[1] == "help":
+        print(
+            """
+Caesar Cipher Program Usage:
 
-    if choice == "1":
-        mode = input("Would you like to encrypt or decrypt? ").strip().lower()
-        text = input("Enter the text: ").strip()
-        shift = int(input("Enter the shift value: "))
-        
-        if mode in ["encrypt", "decrypt"]:
-            result = caesar_cipher(text, shift, mode)
-            print(f"The resulting text is: {result}")
-        else:
-            print("Invalid mode. Please choose 'encrypt' or 'decrypt'.")
-    
-    elif choice == "2":
-        input_file = input("Enter the input file name (with extension): ").strip()
-        output_file = input("Enter the output file name (with extension): ").strip()
-        mode = input("Would you like to encrypt or decrypt the file? ").strip().lower()
-        shift = int(input("Enter the shift value: "))
-        
-        if mode in ["encrypt", "decrypt"]:
-            file_processing(input_file, output_file, shift, mode)
-        else:
-            print("Invalid mode. Please choose 'encrypt' or 'decrypt'.")
-    
+Options:
+  -m, --mode           Mode of operation: encrypt or decrypt (required)
+  -s, --shift          Shift value for the Caesar cipher (required)
+  -t, --text           Text to encrypt or decrypt (optional)
+  -i, --input_file     Input file for encryption or decryption (optional)
+  -o, --output_file    Output file to save the result (optional, required with input_file)
+
+Examples:
+  Encrypt text:
+    python main.py -m encrypt -s 3 -t "Hello, World!"
+  Decrypt text:
+    python main.py -m decrypt -s 3 -t "Khoor, Zruog!"
+  Encrypt a file:
+    python main.py -m encrypt -s 3 -i input.txt -o output.txt
+  Decrypt a file:
+    python main.py -m decrypt -s 3 -i output.txt -o decrypted.txt
+            """
+        )
+        sys.exit(0)
+
+    parser = argparse.ArgumentParser(description="Caesar Cipher Program")
+
+    parser.add_argument(
+        "-m", "--mode", required=True, choices=["encrypt", "decrypt"],
+        help="Choose the mode: 'encrypt' or 'decrypt'"
+    )
+    parser.add_argument(
+        "-s", "--shift", required=True, type=int,
+        help="Shift value for the Caesar cipher"
+    )
+    parser.add_argument(
+        "-t", "--text",
+        help="Text to encrypt or decrypt (optional, for direct input)"
+    )
+    parser.add_argument(
+        "-i", "--input_file",
+        help="Input file for encryption or decryption (optional)"
+    )
+    parser.add_argument(
+        "-o", "--output_file",
+        help="Output file to save the result (optional, required with input_file)"
+    )
+
+    args = parser.parse_args()
+
+    if args.text and args.input_file:
+        print("Error: Please provide either text or an input file, not both.")
+        return
+
+    if args.input_file:
+        if not args.output_file:
+            print("Error: Output file is required when processing a file.")
+            return
+        file_processing(args.input_file, args.output_file, args.shift, args.mode)
+    elif args.text:
+        result = caesar_cipher(args.text, args.shift, args.mode)
+        print(f"The resulting text is: {result}")
     else:
-        print("Invalid choice. Please enter '1' or '2'.")
+        print("Error: Please provide text or an input file.")
 
 if __name__ == "__main__":
     main()
