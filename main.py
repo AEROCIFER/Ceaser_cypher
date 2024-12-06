@@ -1,31 +1,5 @@
-def caesar_cipher(text, shift, mode):
-    result = ""
-    if mode == "decrypt":
-        shift = -shift  # Reverse the shift for decryption
+from file_processing import *
 
-    for char in text:
-        if char.isalpha():
-            start = ord('A') if char.isupper() else ord('a')
-            result += chr((ord(char) - start + shift) % 26 + start)
-        else:
-            result += char
-    return result
-
-def file_processing(input_file, output_file, shift, mode):
-    try:
-        with open(input_file, 'r') as file:
-            content = file.read()
-
-        processed_content = caesar_cipher(content, shift, mode)
-
-        with open(output_file, 'w') as file:
-            file.write(processed_content)
-
-        print(f"File succesfully {mode}ed. Output written to '{output_file}'.")
-    except FileNotFoundError:
-        print(f"Error file not found.")
-    except Exception as e:
-        print(f"A error occured: {e}")
 
 def main():
     print("Caesar Cipher Program")
