@@ -7,6 +7,11 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == "help":
         print(
             """
+Ceser Cipher Program: 
+
+This program enables encryption and decryption of text and text files using the Caesar cipher technique. 
+The encryption and decryption process is based on the shift value specified by the user.
+
 Caesar Cipher Program Usage:
 
 Options:
